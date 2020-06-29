@@ -9,6 +9,7 @@ const userRoutes = require('./routes/users');
 mongoose.connect('mongodb://localhost/ApiAuthentication', {
 	useUnifiedTopology: true,
 	useNewUrlParser: true,
+	useCreateIndex: true
 });
 
 const app = express();
