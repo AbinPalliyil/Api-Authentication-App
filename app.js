@@ -1,7 +1,15 @@
 const express = require('express');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 const userRoutes = require('./routes/users');
+
+
+// Mongo Db Connection
+mongoose.connect('mongodb://localhost/ApiAuthentication', {
+	useUnifiedTopology: true,
+	useNewUrlParser: true,
+});
 
 const app = express();
 
