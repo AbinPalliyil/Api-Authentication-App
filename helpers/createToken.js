@@ -9,7 +9,7 @@ module.exports = {
 				iss: 'Abin',
 				sub: userId,
 				iat: new Date().getTime(),
-				exp: new Date().setDate(new Date().getDate + 1),
+				exp: new Date().setDate(new Date().getDate() + 1),
 			},
 			JWT_Secret,
 		);

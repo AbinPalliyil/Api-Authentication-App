@@ -27,6 +27,7 @@ module.exports = {
 	},
 
 	secret: async (req, res, next) => {
-		console.log('secret');
+		
+		res.status(201).json({secret: "data"})
 	},
 };
