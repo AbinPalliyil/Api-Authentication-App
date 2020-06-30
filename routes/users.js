@@ -10,9 +10,19 @@ router
 	.route('/signup')
 	.post(validateBody(schemas.authSchema), UserControler.signUp);
 
-router.route('/signin').post(UserControler.signIn);
+router
+	.route('/signin')
+	.post(
+		validateBody(schemas.authSchema),
+		passport.authenticate('local', { session: false }),
+		UserControler.signIn,
+	);
 
-router.route('/secret')
-	.get(passport.authenticate('jwt', {session: false}),UserControler.secret,);
+router
+	.route('/secret')
+	.get(
+		passport.authenticate('jwt', { session: false }),
+		UserControler.secret,
+	);
 
 module.exports = router;

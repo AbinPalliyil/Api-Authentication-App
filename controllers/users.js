@@ -23,7 +23,9 @@ module.exports = {
 	},
 
 	signIn: async (req, res, next) => {
-		console.log('signin');
+		const token = signInToken(req.user.id);
+		return res.status(200).json({token});
+
 	},
 
 	secret: async (req, res, next) => {
