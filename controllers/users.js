@@ -1,5 +1,5 @@
 const User = require('../models/user');
-const { JWT_Secret } = require('../config');
+const { JWT_SECRET } = require('../config');
 const { signInToken } = require('../helpers/createToken');
 
 module.exports = {
@@ -33,6 +33,13 @@ module.exports = {
 	googleOauth: async (req, res, next) => {
 		const token = signInToken(req.user.id);
 		return res.status(200).json({ token });
+	},
+
+	facebookOauth: async (req, res, next) => {
+		const token = signInToken(req.user.id);
+		return res.status(200).json({ token });
+
+
 	},
 
 	secret: async (req, res, next) => {

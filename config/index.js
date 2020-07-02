@@ -1,3 +1,10 @@
 module.exports = {
-    JWT_Secret: "Secrert"
+    JWT_SECRET: process.env.JWT_SECRET,
+    GOOGLE_OAUTH_CLIENTID: process.env.GOOGLE_OAUTH_CLIENTID,
+    GOOGLE_OAUTH_CLIENTSECRET: process.env.GOOGLE_OAUTH_CLIENTSECRET,
+    FB_OAUTH_CLIENTID: process.env.FB_OAUTH_CLIENTID,
+    FB_OAUTH_CLIENTSECRET: process.env.FB_OAUTH_CLIENTSECRET
+
+
+
 }

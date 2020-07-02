@@ -1,6 +1,6 @@
 const JWT = require('jsonwebtoken');
 
-const { JWT_Secret } = require('../config');
+const { JWT_SECRET } = require('../config');
 
 module.exports = {
 	signInToken: (userId) => {
@@ -11,7 +11,7 @@ module.exports = {
 				iat: new Date().getTime(),
 				exp: new Date().setDate(new Date().getDate() + 1),
 			},
-			JWT_Secret,
+			JWT_SECRET,
 		);
 	},
 };

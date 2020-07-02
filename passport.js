@@ -2,9 +2,16 @@ const passport = require('passport');
 const JwtStrategy = require('passport-jwt').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const GooglePlusStrategy = require('passport-google-plus-token');
+const FacebookStrategy = require('passport-facebook-token');
 const { ExtractJwt } = require('passport-jwt');
 
-const { JWT_Secret } = require('./config');
+const {
+	JWT_SECRET,
+	GOOGLE_OAUTH_CLIENTID,
+	GOOGLE_OAUTH_CLIENTSECRET,
+	FB_OAUTH_CLIENTID,
+	FB_OAUTH_CLIENTSECRET,
+} = require('./config');
 const User = require('./models/user');
 
 // Authentication using JWT
@@ -12,7 +19,7 @@ passport.use(
 	new JwtStrategy(
 		{
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-			secretOrKey: JWT_Secret,
+			secretOrKey: JWT_SECRET,
 		},
 		async (payload, done) => {
 			try {
@@ -42,7 +49,7 @@ passport.use(
 		async (email, password, done) => {
 			try {
 				// Find the user by email
-				const user = await User.findOne({ "local.email" : email});
+				const user = await User.findOne({ 'local.email': email });
 				// If user not found
 				if (!user) {
 					return done(null, false);
@@ -50,16 +57,15 @@ passport.use(
 
 				// Checking password match
 				const isMatch = await user.isValidPassword(password);
-				console.log(isMatch)
+				console.log(isMatch);
 				if (!isMatch) {
-
 					return done(null, false);
 				}
 
 				// Otherwise return the user
 				done(null, user);
 			} catch (error) {
-				console.log(error)
+				console.log(error);
 			}
 		},
 	),
@@ -70,10 +76,8 @@ passport.use(
 	'googleToken',
 	new GooglePlusStrategy(
 		{
-			clientID:
-				'668837198121-mleeranceitt11gr0vie40h198a9vcf1.apps.googleusercontent.com',
-			clientSecret: 'yR6qR3424SdSdyqbKBl477ie',
-
+			clientID: GOOGLE_OAUTH_CLIENTID,
+			clientSecret: GOOGLE_OAUTH_CLIENTSECRET,
 		},
 		async (accessToken, refreshToken, profile, done) => {
 			try {
@@ -96,8 +100,44 @@ passport.use(
 				await newUser.save();
 				done(null, newUser);
 			} catch (error) {
-				console.log({error});
+				console.log({ error });
+			}
+		},
+	),
+);
 
+// Facebook Authentication
+passport.use(
+	'facebookToken',
+	new FacebookStrategy(
+		{
+			clientID: FB_OAUTH_CLIENTID,
+			clientSecret: FB_OAUTH_CLIENTSECRET,
+		},
+		async (accessToken, refreshToken, profile, done) => {
+			try {
+
+				// Checking existing user
+				const existingUser = await User.findOne({'facebook.id' : profile.id});
+				if(existingUser){
+					done(null, existingUser);
+				}
+				
+				// Creating new user
+				const newUser = new User ({
+					method: "facebook",
+					facebook: {
+						id: profile.id,
+						email: profile.emails[0].value,
+					}
+				});
+				await newUser.save();
+				done(null, newUser);
+
+
+				
+			} catch (error) {
+				done(error, false, error.message)
 			}
 		},
 	),
