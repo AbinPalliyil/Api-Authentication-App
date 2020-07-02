@@ -24,5 +24,11 @@ router
 		passport.authenticate('jwt', { session: false }),
 		UserControler.secret,
 	);
+router
+	.route('/oauth/google')
+	.post(passport.authenticate('googleToken', { session: false }),
+	UserControler.googleOauth,
+	
+	);
 
-module.exports = router;
+module.exports = router; 

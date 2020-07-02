@@ -6,10 +6,13 @@ module.exports = {
 	// User SignUp
 	signUp: async (req, res, next) => {
 		const { email, password } = req.value.body;
-		const newUser = new User({ email, password });
+		const newUser = new User({
+			method: 'local',
+			local: { email, password },
+		});
 
 		// Check if the user already exist
-		const findUser = await User.findOne({ email });
+		const findUser = await User.findOne({ "local.email": email });
 		if (findUser) {
 			return res.json({ message: 'User already exist' });
 		}
@@ -24,12 +27,15 @@ module.exports = {
 
 	signIn: async (req, res, next) => {
 		const token = signInToken(req.user.id);
-		return res.status(200).json({token});
+		return res.status(200).json({ token });
+	},
 
+	googleOauth: async (req, res, next) => {
+		const token = signInToken(req.user.id);
+		return res.status(200).json({ token });
 	},
 
 	secret: async (req, res, next) => {
-		
-		res.status(201).json({secret: "data"})
+		res.status(201).json({ secret: 'data' });
 	},
 };
