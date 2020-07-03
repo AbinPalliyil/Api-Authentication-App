@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 class Header extends Component {
 	render() {
 		return (
-			<nav className='navbar navbar-expand-lg navbar-dark bg-dark'>
+			<nav className='navbar navbar-expand-lg navbar-dark bg-dark' style={{marginBottom: '30px'}}>
 				<a className='navbar-brand'>Dn-Army</a>
 				<div className="collapse navbar-collapse">
 					<ul className='navbar-nav mr-auto'>
