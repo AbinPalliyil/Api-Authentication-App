@@ -14,7 +14,7 @@ module.exports = {
 		// Check if the user already exist
 		const findUser = await User.findOne({ "local.email": email });
 		if (findUser) {
-			return res.json({ message: 'User already exist' });
+			return res.status(400).json({message: 'User already exist' });
 		}
 
 		// Create new user

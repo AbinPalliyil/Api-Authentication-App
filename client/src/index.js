@@ -2,7 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
+import reduxThunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
@@ -13,7 +15,12 @@ import Signup from './components/Signup';
 import reducers from './reducers';
 
 ReactDOM.render(
-	<Provider store={createStore(reducers, {})}>
+	<Provider
+		store={createStore(
+			reducers,
+			{},
+			composeWithDevTools(applyMiddleware(reduxThunk)),
+		)}>
 		<BrowserRouter>
 			<App>
 				<Route exact path='/' component={Home} />
