@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 import CustomInput from './CustomInput';
 import * as actions from '../actions';
@@ -10,10 +12,25 @@ class Signup extends Component {
 	constructor(props) {
 		super(props);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.responseFacebook = this.responseFacebook.bind(this);
+		this.responseGoogle = this.responseGoogle.bind(this);
 	}
 
-	onSubmit(formdata) {
-		this.props.signUp(formdata);
+	async onSubmit(formdata) {
+		await this.props.signUp(formdata);
+		if (!this.props.errorMessage) {
+			this.props.history.push('/dashboard');
+		}
+	}
+	async responseFacebook(res) {
+		await this.props.facebookSignUp(res.accessToken);
+		if (!this.props.errorMessage) {
+			this.props.history.push('/dashboard');
+		}
+	}
+	responseGoogle(res) {
+		console.log(res.tokenObj.access_token);
+		this.props.googleSignUp(res.tokenObj.access_token);
 	}
 	render() {
 		const { handleSubmit } = this.props;
@@ -40,6 +57,11 @@ class Signup extends Component {
 								component={CustomInput}
 							/>
 						</fieldset>
+						{this.props.errorMessage && (
+							<div className='alert alert-danger'>
+								{this.props.errorMessage.message}
+							</div>
+						)}
 						<button className={'btn btn-primary'} type='submit'>
 							Sign Up
 						</button>
@@ -50,8 +72,21 @@ class Signup extends Component {
 						<div className='alert alert-primary'>
 							Or Sign up using third part
 						</div>
-						<button className='btn btn-primary'>Facebook</button>
-						<button className='btn btn-danger'>Gmail</button>
+						<FacebookLogin
+							appId='2505446886344494'
+							autoLoad={true}
+							textButton='Facebook'
+							fields='name,email,picture'
+							callback={this.responseFacebook}
+							cssClass='btn btn-outline-primary'
+						/>
+						<GoogleLogin
+							clientId='668837198121-mleeranceitt11gr0vie40h198a9vcf1.apps.googleusercontent.com'
+							buttonText='Google'
+							onSuccess={this.responseGoogle}
+							onFailure={this.responseGoogle}
+							className='btn btn-outline-danger'
+						/>
 					</div>
 				</div>
 			</div>
@@ -59,7 +94,11 @@ class Signup extends Component {
 	}
 }
 
+const mapStatesToProps = (state) => ({
+	errorMessage: state.auth.errorMessage,
+});
+
 export default compose(
-	connect(null, actions),
+	connect(mapStatesToProps, actions),
 	reduxForm({ form: 'signup' }),
 )(Signup);

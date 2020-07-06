@@ -14,11 +14,18 @@ import Signin from './components/Signin';
 import Signup from './components/Signup';
 import reducers from './reducers';
 
+const jwtToken = localStorage.getItem('JWT_TOKEN');
+
 ReactDOM.render(
 	<Provider
 		store={createStore(
 			reducers,
-			{},
+			{
+				auth: {
+					token: jwtToken,
+					isAuthenticated: jwtToken ? true : false,
+				},
+			},
 			composeWithDevTools(applyMiddleware(reduxThunk)),
 		)}>
 		<BrowserRouter>
