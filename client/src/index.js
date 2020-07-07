@@ -13,6 +13,7 @@ import Dashboard from './components/Dashboard';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
 import reducers from './reducers';
+import AuthGrand from './components/HOC/AuthGrand'
 
 const jwtToken = localStorage.getItem('JWT_TOKEN');
 
@@ -31,7 +32,7 @@ ReactDOM.render(
 		<BrowserRouter>
 			<App>
 				<Route exact path='/' component={Home} />
-				<Route exact path='/dashboard' component={Dashboard} />
+				<Route exact path='/dashboard' component={AuthGrand(Dashboard)} />
 				<Route exact path='/signin' component={Signin} />
 				<Route exact path='/signup' component={Signup} />
 			</App>
